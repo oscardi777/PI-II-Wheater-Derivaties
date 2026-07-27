@@ -1,0 +1,195 @@
+Voy a proporcionarte un archivo CSV que contiene dos series históricas mensuales:
+
+1. Niño 3.4 SST Index (anomalía de temperatura superficial del mar, NOAA).
+2. Precio de Bolsa Nacional de Energía de Colombia (XM).
+
+Contexto del proyecto (solo como referencia):
+
+El objetivo final de mi investigación es:
+
+"Diseño y valoración de un derivado climático basado en el índice Niño 3.4 SST para la cobertura del riesgo hidrometeorológico en empresas colombianas."
+
+En este momento NO quiero diseñar el derivado ni valorar contratos financieros.
+
+Únicamente quiero responder rigurosamente la siguiente pregunta de investigación:
+
+"¿Existe evidencia econométrica de que las fluctuaciones del índice Niño 3.4 están relacionadas con el comportamiento del precio de bolsa de la energía en Colombia?"
+
+Quiero que desarrolles un notebook (.ipynb) completamente documentado en Python, escrito con un enfoque académico, donde cada sección explique qué se está haciendo, por qué se hace y cómo interpretar los resultados.
+
+No quiero únicamente obtener un p-value o una correlación; quiero entender la relación estadística entre ambas variables desde múltiples enfoques.
+
+==========================
+OBJETIVOS DEL NOTEBOOK
+==========================
+
+El notebook debe realizar un análisis econométrico completo que permita concluir si existe una relación estadísticamente significativa entre ambas variables y si el índice Niño 3.4 podría considerarse un candidato adecuado como variable subyacente de un futuro derivado climático.
+
+==========================
+REQUISITOS
+==========================
+
+Quiero que el notebook siga el siguiente orden.
+
+# 1. Carga de datos (la limpieza y valores faltantes han sido realizados anteriormente, solo bastaria con verificar la no existencia de faltantes)
+
+------------------------------------------------
+
+# 2. Análisis exploratorio
+
+Realizar:
+
+- series temporales
+- histogramas
+- boxplots
+- densidades
+- scatter plot
+
+Mostrar:
+
+- media
+- mediana
+- desviación estándar
+- coeficiente de variación
+- skewness
+- kurtosis
+
+Explicar qué indican estas métricas.
+
+------------------------------------------------
+
+# 3. Relación visual
+
+Graficar ambas series:
+
+- normalizadas
+- estandarizadas
+
+Quiero observar visualmente si existen patrones similares.
+
+------------------------------------------------
+
+# 4. Correlaciones
+
+Calcular:
+
+- Pearson
+- Spearman
+- Kendall
+
+Interpretar:
+
+- magnitud
+- dirección
+- significancia
+
+No limitarse a mostrar números.
+
+Explicar qué significa cada resultado.
+
+------------------------------------------------
+
+# 5. Correlaciones con rezagos (Cross Correlation)
+
+Este punto es muy importante.
+
+Quiero saber si el precio de la energía responde meses después de los cambios del Niño 3.4.
+
+Analizar al menos:
+
+lags desde -12 hasta +12 meses (ojala el parametron 12 sea modificable)
+
+Mostrar:
+
+- gráfico de correlación cruzada
+- tabla de resultados
+
+Identificar automáticamente el lag donde la correlación absoluta sea máxima.
+
+Explicar cuidadosamente cómo interpretar un lag positivo y uno negativo.
+
+------------------------------------------------
+
+# 6. Estacionariedad
+
+Aplicar:
+
+ADF
+
+KPSS
+
+Explicar:
+
+- hipótesis nula
+- interpretación
+- necesidad de diferenciar o no las series.
+
+Si es necesario:
+
+- diferenciar
+- volver a aplicar las pruebas.
+
+
+# 7. Conclusiones econométricas
+
+Redactar una conclusión académica.
+
+Debe responder:
+
+- ¿Existe relación?
+- ¿Es fuerte o débil?
+- ¿Es contemporánea o con rezagos?
+- ¿Existe evidencia de largo plazo?
+- ¿Puede justificarse continuar con la investigación del derivado climático?
+
+No mencionar derivados financieros en esta sección excepto para responder esa última pregunta.
+
+==========================
+PROGRAMACIÓN
+==========================
+
+Quiero código limpio.
+
+Utilizar:
+
+pandas
+
+numpy
+
+matplotlib
+
+statsmodels
+
+scipy
+
+sklearn (solo si es necesario)
+
+No utilizar librerías innecesarias.
+
+Separar claramente cada sección mediante títulos en Markdown.
+
+Comentar el código.
+
+No ocultar resultados.
+
+==========================
+INTERPRETACIÓN
+==========================
+
+Este punto es el más importante.
+
+No quiero un notebook que solo imprima números.
+
+Después de cada prueba estadística quiero una explicación detallada de:
+
+- qué se hizo,
+- por qué se hizo,
+- qué significan los resultados,
+- cómo deben interpretarse desde un punto de vista econométrico,
+- y cuál es la implicación para la hipótesis de que el índice Niño 3.4 pueda servir como variable subyacente de un derivado climático para empresas del sector energético colombiano.
+
+==========================
+OBJETIVO FINAL
+==========================
+
+El notebook debe tener calidad suficiente para formar parte del análisis metodológico de una tesis de maestría o de un artículo científico. Debe priorizar el rigor econométrico, la correcta interpretación estadística y la reproducibilidad de los resultados.

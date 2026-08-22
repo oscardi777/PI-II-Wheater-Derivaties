@@ -1,0 +1,384 @@
+Quiero que actúes como un econometrista, investigador en series de tiempo y experto en Python. Tu objetivo es construir un notebook de Jupyter completamente estructurado, documentado y explicado para realizar un análisis mediante un modelo VARX-MGARCH (Vector Autoregression with exogen variable and GARCH Multivariado).
+
+No quiero únicamente código: quiero que cada sección contenga una explicación teórica, una justificación metodológica, una interpretación económica y estadística, además de visualizaciones claras.
+
+El objetivo del análisis es estudiar la relación dinámica entre cuatro variables del mercado eléctrico colombiano:
+
+• Índice RONI del fenomeno ENSOO en la region 3.4 (Variable exogena)
+• Aportes hídricos (m³/s)
+• Precio de bolsa de energía
+- Generacion electrica (kWh)
+
+La información ya se encuentra consolidada en un archivo CSV con la siguiente estructura:
+
+date | indice | aportes | precio | generacion
+
+donde "date" corresponde a la fecha mensual.
+
+No es necesario realizar limpieza de datos, únicamente leer correctamente el archivo y convertir la columna date al índice temporal.
+
+===========================
+ESTRUCTURA DEL NOTEBOOK
+===========================
+
+Organiza el notebook mediante títulos y subtítulos en Markdown.
+
+Cada sección debe contener:
+
+- Explicación teórica
+- Justificación de por qué se realiza
+- Código
+- Interpretación de resultados
+- Conclusión de la sección
+
+No omitas ninguna explicación.
+
+Las siguientes serian un flujo de secciones recomendadas, si para la parte MGARCH son necesarias otras opciones despues de la creacion del modelo VAR, es bueno que las crees y las especifiques con sus respectivas explicaciones
+
+===========================
+1. IMPORTACIÓN DE LIBRERÍAS
+===========================
+
+Importar todas las librerías necesarias.
+
+Mantener únicamente aquellas realmente utilizadas.
+
+===========================
+2. CARGA DE DATOS (LIMPIEZA DE DATOS YA REALIZADA)
+===========================
+
+Leer el CSV.
+
+Convertir la fecha al formato datetime.
+
+Establecer la fecha como índice temporal.
+
+Explicar qué representa cada variable.
+
+===========================
+3. VISUALIZACIÓN EXPLORATORIA
+===========================
+
+Realizar gráficos claros y profesionales.
+
+Incluir:
+
+• Serie temporal de cada variable por separado.
+
+• Las cuatro series en una misma figura utilizando escalas independientes o normalizadas para facilitar la comparación.
+
+• Histogramas.
+
+• Boxplots.
+
+• Densidades.
+
+• Matriz de dispersión (pairplot).
+
+• Matriz de correlaciones.
+
+• Heatmap de correlaciones.
+
+Interpretar cada gráfico.
+
+Discutir:
+
+- tendencias
+- cambios de nivel
+- estacionalidad visible
+- posibles rezagos
+- valores atípicos
+- volatilidad
+
+===========================
+4. ¿ES APROPIADO USAR UN VAR-MGARCH?
+===========================
+
+Antes de estimar el modelo, demostrar rigurosamente si un VAR es apropiado.
+
+Explicar primero:
+
+¿Qué es un VAR-MGARCH?
+
+¿Cuándo debe utilizarse?
+
+¿Cuáles son sus supuestos?
+
+¿Por qué es importante verificarlos?
+
+Después realizar:
+
+4.1 Estacionariedad
+
+Aplicar:
+
+• ADF
+
+• KPSS
+
+Explicar:
+
+Hipótesis.
+
+Interpretación.
+
+Ventajas y limitaciones.
+
+Construir una tabla resumen indicando para cada variable:
+
+ADF
+
+KPSS
+
+Conclusión.
+
+Si alguna serie no es estacionaria (y deben ser estacionarias):
+
+• aplicar diferencias
+
+• repetir las pruebas
+
+• explicar por qué se diferencia
+
+• mostrar las nuevas series
+
+• volver a verificar estacionariedad.
+
+Al finalizar indicar claramente cuál será el conjunto de variables que entrará al VAR.
+
+===========================
+5. ELECCIÓN DEL NÚMERO DE REZAGOS
+===========================
+
+Explicar:
+
+¿Por qué el número de rezagos es importante?
+
+¿Qué sucede si se escogen pocos?
+
+¿Qué sucede si se escogen demasiados?
+
+Aplicar:
+
+select_order()
+
+Mostrar una tabla con:
+
+AIC
+
+BIC
+
+HQIC
+
+FPE
+
+Explicar cada criterio.
+
+Justificar cuál utilizarás.
+
+Seleccionar el orden óptimo.
+
+===========================
+6. ESTIMACIÓN DEL MODELO VAR
+===========================
+
+Estimar el modelo.
+
+Mostrar:
+
+summary()
+
+Explicar cuidadosamente:
+
+qué representa cada ecuación
+
+qué representa cada coeficiente
+
+cómo interpretar:
+
+coeficientes positivos
+
+coeficientes negativos
+
+magnitud
+
+rezagos
+
+significancia
+
+Mostrar explícitamente las tres ecuaciones del modelo estimado, por ejemplo:
+
+Indice_t = ...
+
+Aportes_t = ...
+
+Generacion_t = ...
+
+Precio_t = ...
+
+expresadas matemáticamente con todos los coeficientes estimados.
+
+Interpretar económicamente las relaciones más relevantes.
+
+===========================
+7. DIAGNÓSTICOS DEL MODELO
+===========================
+
+Explicar por qué deben verificarse.
+
+
+===========================
+8. CAUSALIDAD DE GRANGER
+===========================
+
+Explicar rigurosamente:
+
+Qué significa.
+
+Qué NO significa.
+
+Cuál es la hipótesis nula.
+
+Cómo interpretar los p-values.
+
+Evaluar:
+
+Indice → Aportes
+
+Aportes → Indice
+
+Indice → Precio
+
+Precio → Indice
+
+Aportes → Precio
+
+Precio → Aportes
+
+Construir una tabla resumen indicando:
+
+Variable causa
+
+Variable efecto
+
+estadístico
+
+p-value
+
+Conclusión
+
+Interpretar económicamente cada resultado.
+
+===========================
+9. FUNCIONES IMPULSO-RESPUESTA (IRF)
+===========================
+
+Este es uno de los objetivos principales.
+
+Explicar primero:
+
+¿Qué es una función impulso-respuesta?
+
+¿Qué representa un shock?
+
+¿Cómo se interpreta?
+
+¿Qué significa el horizonte temporal?
+
+Después calcular las IRF.
+
+Mostrar gráficos claros para todas las combinaciones entre variables.
+
+Interpretar:
+
+¿Cómo responde el precio ante un shock positivo del Índice Niño?
+
+¿Cómo responden los aportes?
+
+¿Cuánto tarda en disiparse el efecto?
+
+¿Cuál es la magnitud?
+
+¿Existen efectos persistentes?
+
+Explicar tanto el signo como la duración de los efectos.
+
+===========================
+10. PRONÓSTICOS DEL VAR-MGARCH
+===========================
+
+Explicar brevemente cómo funciona el pronóstico en un VAR-MGARCH.
+
+Realizar pronósticos para varios períodos hacia adelante (por ejemplo, 12 meses).
+
+Mostrar:
+
+gráficos
+
+bandas de confianza
+
+Interpretar.
+
+===========================
+12. CONCLUSIONES DEL ANÁLISIS
+===========================
+
+Realizar una discusión completa de resultados.
+
+Responder:
+
+¿Existe evidencia de interacción dinámica?
+
+¿Qué relaciones parecen más fuertes?
+
+¿Qué reveló Granger?
+
+¿Qué mostraron las IRF?
+
+¿Qué mostró la FEVD?
+
+¿El VAR parece apropiado?
+
+¿Cuáles son las limitaciones?
+
+===========================
+REQUISITOS DE PROGRAMACIÓN
+===========================
+
+• Código limpio.
+
+• Funciones cuando sea apropiado.
+
+• Comentarios únicamente donde aporten valor.
+
+• Variables con nombres claros.
+
+• Gráficos profesionales.
+
+• Tablas bien organizadas.
+
+• Utilizar principalmente:
+
+pandas
+
+numpy
+
+matplotlib
+
+statsmodels
+
+scipy
+
+Evitar librerías innecesarias.
+
+===========================
+IMPORTANTE
+===========================
+
+No generes un único bloque enorme de código. Divide el notebook en secciones alternando Markdown y código.
+
+Cada bloque de código debe poder ejecutarse independientemente dentro del flujo normal del notebook.
+
+Antes de cada bloque de código explica qué se hará, por qué se hará y cómo deben interpretarse los resultados.
+
+En todas las interpretaciones utiliza el contexto de este proyecto: estudiar la relación dinámica entre el Índice Niño 3.4, los aportes hídricos y el precio de bolsa de energía, con el objetivo final de evaluar si existe evidencia econométrica suficiente para sustentar el diseño de un derivado climático para la cobertura del riesgo en el mercado eléctrico colombiano.

@@ -1,0 +1,1487 @@
+# PROMPT PARA CLAUDE — CONSTRUCCIÓN DE UN MODELO VARX EN PYTHON PARA RONI, APORTES HÍDRICOS, PRECIO DE ENERGÍA Y GENERACIÓN
+
+Quiero que actúes como un econometrista especializado en series de tiempo, investigador en economía de la energía, experto en derivados financieros climáticos y experto en Python para investigación cuantitativa.
+
+Tu objetivo es construir un notebook de Jupyter completamente estructurado, documentado, reproducible y metodológicamente riguroso para realizar un análisis mediante un modelo VARX (Vector Autoregression with Exogenous Variables).
+
+El notebook debe tener calidad de tesis de maestría o artículo científico.
+
+NO quiero únicamente código.
+
+Cada sección debe contener:
+
+1. Explicación teórica.
+2. Justificación metodológica.
+3. Código Python.
+4. Visualizaciones cuando sean pertinentes.
+5. Interpretación estadística.
+6. Interpretación económica.
+7. Conclusión de la sección.
+
+El objetivo es que el notebook no solamente produzca resultados, sino que permita comprender qué se está haciendo, por qué se hace, qué significa cada resultado y cómo dicho resultado contribuye al objetivo general del proyecto.
+
+============================================================
+
+1. CONTEXTO DEL PROYECTO
+   ============================================================
+
+El proyecto general se titula:
+
+"Diseño y valoración de un derivado climático basado en el índice RONI para la cobertura del riesgo hidrometeorológico en empresas energéticas colombianas."
+
+El objetivo es estudiar si las fluctuaciones de variables climáticas asociadas al fenómeno ENSO generan un riesgo económico cuantificable sobre el mercado eléctrico colombiano y, posteriormente, determinar si existe suficiente evidencia econométrica para justificar el diseño de un derivado climático.
+
+En esta etapa se dispone de cuatro series de tiempo mensuales:
+
+1. Índice RONI
+2. Aportes hídricos (m³/s)
+3. Precio de energía
+4. Generación (kWh)
+
+El archivo CSV ya se encuentra procesado y tiene la siguiente estructura:
+
+date | Indice | aportes | Precio | Generacion
+
+La columna `date` corresponde a la fecha mensual.
+
+NO es necesario realizar limpieza compleja de los datos.
+
+Sin embargo, sí debes:
+
+* leer correctamente el CSV;
+* convertir `date` a formato datetime;
+* establecer `date` como índice;
+* verificar frecuencia temporal;
+* verificar valores faltantes;
+* verificar duplicados;
+* verificar tipos de datos;
+* verificar que las cuatro variables sean numéricas;
+* comprobar que las observaciones estén correctamente ordenadas temporalmente.
+
+============================================================
+2. ESTRUCTURA METODOLÓGICA DEL MODELO
+=====================================
+
+IMPORTANTE:
+
+Este NO será un VAR de cuatro variables.
+
+El modelo será un VARX.
+
+La estructura debe ser:
+
+VARIABLE EXÓGENA:
+
+RONI
+
+VARIABLES ENDÓGENAS:
+
+* aportes
+* Precio
+* Generacion
+
+Por tanto:
+
+Y_t = [Aportes_t, Precio_t, Generacion_t]'
+
+X_t = RONI_t
+
+La especificación general será:
+
+Y_t = c + A_1Y_{t-1} + A_2Y_{t-2} + ... + A_pY_{t-p} + B X_t + ε_t
+
+donde:
+
+Y_t = vector de variables endógenas.
+
+X_t = variable exógena RONI.
+
+c = vector de constantes.
+
+A_i = matrices de coeficientes autorregresivos.
+
+B = matriz de coeficientes asociados a RONI.
+
+ε_t = vector de innovaciones.
+
+Explica matemáticamente esta estructura.
+
+Posteriormente expresa explícitamente las tres ecuaciones:
+
+Aportes_t = ...
+
+Precio_t = ...
+
+Generacion_t = ...
+
+incluyendo:
+
+* constantes;
+* rezagos de las variables endógenas;
+* RONI contemporáneo;
+* todos los coeficientes estimados.
+
+IMPORTANTE:
+
+NO trates a RONI como una cuarta variable endógena.
+
+Explica claramente la diferencia entre:
+
+VAR(3)
+
+y
+
+VARX(3, exógena)
+
+y por qué RONI se está tratando como exógena.
+
+============================================================
+3. REFERENCIA AL NOTEBOOK VAR ANTERIOR
+======================================
+
+Existe un notebook anterior denominado:
+
+"analisis_VAR_RONI_APORTES_PRICE_diferencias.html"
+
+Este notebook fue utilizado anteriormente para realizar un VAR entre:
+
+* Índice Niño 3.4
+* Aportes
+* Precio
+
+La estructura general de ese notebook debe conservarse porque fue considerada adecuada para el proyecto.
+
+La estructura utilizada anteriormente fue:
+
+1. Importación de librerías
+2. Carga de datos
+3. Visualización exploratoria
+4. Evaluación de estacionariedad y pertinencia del VAR
+5. Selección del número de rezagos
+6. Estimación del modelo
+7. Diagnósticos
+8. Causalidad de Granger
+9. Funciones impulso-respuesta
+10. FEVD
+11. Pronósticos
+12. Conclusiones
+
+Mantén esta estructura general, pero adáptala correctamente al contexto VARX.
+
+NO copies mecánicamente el VAR anterior.
+
+Debes modificar metodológicamente aquello que sea necesario debido a que RONI ahora es una variable exógena y las variables endógenas son:
+
+Aportes, Precio y Generacion.
+
+============================================================
+4. OBJETIVO ECONOMÉTRICO
+========================
+
+El objetivo principal de este VARX es estudiar la transmisión dinámica:
+
+RONI
+↓
+Aportes hídricos
+↓
+Generación
+↓
+Precio de energía
+
+pero sin asumir de antemano que esta cadena sea verdadera.
+
+El modelo debe permitir determinar si existe evidencia estadística compatible con estas relaciones.
+
+IMPORTANTE:
+
+NO asumas resultados.
+
+NO afirmes que RONI causa Aportes.
+
+NO afirmes que Aportes causa Precio.
+
+NO afirmes que Generación causa Precio.
+
+Todo debe determinarse a partir de los resultados.
+
+La finalidad es obtener evidencia econométrica para evaluar si la variabilidad climática puede representar una fuente de riesgo económico para agentes del mercado eléctrico colombiano.
+
+============================================================
+5. IMPORTACIÓN DE LIBRERÍAS
+===========================
+
+Importar únicamente las librerías realmente utilizadas.
+
+Principalmente:
+
+pandas
+numpy
+matplotlib
+statsmodels
+scipy
+
+Evitar librerías innecesarias.
+
+Utilizar funciones y estructuras de código limpias.
+
+Fijar una semilla cuando exista algún procedimiento estocástico.
+
+============================================================
+6. CARGA DE DATOS
+=================
+
+Leer el archivo CSV.
+
+Utilizar una variable:
+
+RUTA_DATOS = "..."
+
+para que el usuario pueda modificar fácilmente la ubicación.
+
+Convertir:
+
+date → datetime
+
+y establecer:
+
+date
+
+como índice temporal.
+
+Mostrar:
+
+* primeras filas;
+* últimas filas;
+* dimensiones;
+* tipos de datos;
+* valores faltantes;
+* duplicados;
+* frecuencia;
+* estadísticas descriptivas.
+
+Explicar qué representa cada variable.
+
+Crear explícitamente:
+
+df
+
+df_endog
+
+df_exog
+
+donde:
+
+df_endog = [aportes, Precio, Generacion]
+
+df_exog = [Indice]
+
+============================================================
+7. VISUALIZACIÓN EXPLORATORIA
+=============================
+
+Realizar un análisis exploratorio completo antes de estimar el modelo.
+
+Incluir:
+
+7.1 Serie temporal de RONI
+
+7.2 Serie temporal de Aportes
+
+7.3 Serie temporal de Precio
+
+7.4 Serie temporal de Generación
+
+7.5 Las cuatro variables en gráficos separados con formato profesional.
+
+7.6 Comparación de las variables endógenas normalizadas.
+
+7.7 Comparación de RONI con cada variable endógena.
+
+Por ejemplo:
+
+RONI vs Aportes
+
+RONI vs Precio
+
+RONI vs Generacion
+
+7.8 Histogramas.
+
+7.9 Boxplots.
+
+7.10 Densidades.
+
+7.11 Matriz de dispersión para las variables endógenas.
+
+7.12 Matriz de correlaciones.
+
+7.13 Heatmap de correlaciones.
+
+7.14 Si resulta apropiado, analizar correlaciones cruzadas con rezagos.
+
+Esto último es especialmente importante.
+
+Explorar si RONI parece estar relacionado con:
+
+* Aportes contemporáneos;
+* Aportes con rezagos;
+* Precio con rezagos;
+* Generación con rezagos.
+
+NO interpretar correlación como causalidad.
+
+Explicar claramente esta diferencia.
+
+Para cada visualización explicar:
+
+* qué muestra;
+* qué patrón se observa;
+* qué implicaciones puede tener;
+* qué NO se puede concluir.
+
+============================================================
+8. ¿ES APROPIADO UTILIZAR UN VARX?
+==================================
+
+Antes de estimar el modelo, explicar cuidadosamente:
+
+¿Qué es un VAR?
+
+¿Qué es un VARX?
+
+¿Cuál es la diferencia entre VAR y VARX?
+
+¿Cuándo es apropiado utilizar un VARX?
+
+¿Qué significa que una variable sea exógena?
+
+¿Por qué RONI puede considerarse una candidata razonable a variable exógena?
+
+Explicar que la exogeneidad aquí debe entenderse en el sentido del modelo y del horizonte temporal considerado, y no como una afirmación absoluta de independencia causal.
+
+Explicar además que:
+
+RONI es un indicador climático.
+
+Las variables energéticas no pueden modificar físicamente el océano de forma contemporánea a la escala relevante del modelo.
+
+Por tanto, existe una justificación económica/física para tratar RONI como exógena respecto al sistema eléctrico.
+
+Sin embargo, dejar claro que esto constituye un supuesto de modelación que debe declararse y discutirse.
+
+============================================================
+9. ESTACIONARIEDAD
+==================
+
+Antes de estimar el VARX evaluar estacionariedad.
+
+Aplicar:
+
+ADF
+KPSS
+
+a:
+
+* Aportes
+* Precio
+* Generacion
+* RONI
+
+Explicar para cada prueba:
+
+Hipótesis nula.
+
+Hipótesis alternativa.
+
+Qué significa rechazar/no rechazar.
+
+Ventajas.
+
+Limitaciones.
+
+Construir una tabla resumen:
+
+Variable | ADF estadístico | ADF p-value | KPSS estadístico | KPSS p-value | Conclusión
+
+Analizar las series en niveles.
+
+Si alguna variable no es estacionaria:
+
+aplicar transformaciones apropiadas.
+
+Para variables positivas como Precio y Generacion, evaluar cuidadosamente si resulta apropiado utilizar:
+
+ln(X_t)
+
+y/o:
+
+Δln(X_t)
+
+cuando metodológicamente corresponda.
+
+Para variables como RONI, no aplicar logaritmos automáticamente.
+
+Si se diferencia una variable, explicar por qué.
+
+NO diferenciar automáticamente todas las variables.
+
+La transformación debe depender de los resultados.
+
+Después repetir:
+
+ADF
+
+KPSS
+
+y confirmar la estacionariedad.
+
+Mostrar las series transformadas.
+
+Explicar cuál será finalmente:
+
+Y_t
+
+y cuál será:
+
+X_t
+
+============================================================
+10. CONSIDERACIÓN DE COINTEGRACIÓN
+==================================
+
+Aunque el modelo será VARX, evaluar si existe evidencia de relaciones de largo plazo entre las variables endógenas cuando las series en niveles sean I(1).
+
+Explicar:
+
+¿Qué es cointegración?
+
+¿Por qué importa?
+
+¿Qué significa encontrar cointegración?
+
+¿Cuál es la diferencia entre:
+
+VAR en diferencias
+
+VAR en niveles
+
+VECM
+
+VARX
+
+Si las variables endógenas presentan cointegración, NO ignorar el resultado.
+
+Explicar si el VARX en diferencias sigue siendo apropiado para el objetivo del análisis o si sería metodológicamente preferible considerar una formulación VECMX / modelo con corrección de errores.
+
+No forzar el uso de un VARX si los resultados indican que otra metodología es más apropiada.
+
+El notebook debe indicar claramente:
+
+"Con base en las pruebas realizadas, la especificación recomendada es..."
+
+y justificarla.
+
+============================================================
+11. ELECCIÓN DEL NÚMERO DE REZAGOS
+==================================
+
+Seleccionar el número óptimo de rezagos.
+
+Explicar:
+
+¿Por qué los rezagos son importantes?
+
+¿Qué representa un rezago?
+
+¿Qué ocurre si se utilizan pocos?
+
+¿Qué ocurre si se utilizan demasiados?
+
+Utilizar criterios como:
+
+AIC
+
+BIC
+
+HQIC
+
+FPE
+
+Si statsmodels permite utilizar `select_order()` apropiadamente para el VARX, utilizarlo.
+
+Si existe alguna limitación de implementación para variables exógenas, explicar la limitación y utilizar una estrategia metodológicamente correcta para seleccionar el número de rezagos.
+
+Mostrar una tabla.
+
+Justificar la selección final.
+
+NO elegir simplemente el AIC porque produce el menor valor.
+
+Discutir el equilibrio entre:
+
+* ajuste;
+* parsimonia;
+* tamaño de muestra;
+* estabilidad;
+* interpretabilidad.
+
+============================================================
+12. ESTIMACIÓN DEL VARX
+=======================
+
+Estimar el modelo VARX utilizando las variables endógenas:
+
+Aportes
+
+Precio
+
+Generacion
+
+y RONI como variable exógena.
+
+Utilizar la implementación apropiada de `statsmodels`.
+
+Mostrar:
+
+summary()
+
+Explicar cuidadosamente:
+
+* coeficientes;
+* errores estándar;
+* estadísticos t;
+* p-values;
+* significancia;
+* rezagos;
+* efecto de RONI.
+
+Separar claramente:
+
+EFECTOS DINÁMICOS ENDÓGENOS
+
+de
+
+EFECTOS DE LA VARIABLE EXÓGENA RONI.
+
+============================================================
+13. EXPRESIÓN MATEMÁTICA DEL MODELO
+===================================
+
+Después de estimar el modelo, construir automáticamente las ecuaciones matemáticas usando los coeficientes reales obtenidos.
+
+Por ejemplo:
+
+Aportes_t =
+c1
+
+* φ11,1 Aportes_{t-1}
+* φ12,1 Precio_{t-1}
+* φ13,1 Generacion_{t-1}
+* ...
+* β1 RONI_t
+* ε1,t
+
+Precio_t =
+c2
+
+* φ21,1 Aportes_{t-1}
+* φ22,1 Precio_{t-1}
+* φ23,1 Generacion_{t-1}
+* ...
+* β2 RONI_t
+* ε2,t
+
+Generacion_t =
+c3
+
+* φ31,1 Aportes_{t-1}
+* φ32,1 Precio_{t-1}
+* φ33,1 Generacion_{t-1}
+* ...
+* β3 RONI_t
+* ε3,t
+
+Sustituir los símbolos por los valores estimados reales.
+
+No inventar coeficientes.
+
+Redondear de manera razonable.
+
+Mostrar las ecuaciones en formato matemático.
+
+Interpretar especialmente:
+
+* signo;
+* magnitud;
+* significancia estadística;
+* interpretación económica.
+
+============================================================
+14. DIAGNÓSTICOS DEL MODELO
+===========================
+
+Realizar diagnósticos completos.
+
+14.1 Estabilidad
+
+Explicar la condición de estabilidad.
+
+Analizar las raíces del sistema VARX.
+
+Si la implementación disponible no permite obtener directamente las raíces del VARX de la misma forma que un VAR estándar, explicar la limitación y utilizar el diagnóstico apropiado disponible.
+
+Mostrar visualización.
+
+Concluir si el sistema es estable.
+
+14.2 Autocorrelación de residuos
+
+Aplicar el test de whiteness / Portmanteau o equivalente disponible.
+
+Explicar:
+
+H0
+
+H1
+
+p-value
+
+Interpretación.
+
+14.3 Normalidad
+
+Aplicar prueba de normalidad multivariada disponible.
+
+Por ejemplo:
+
+Jarque-Bera
+
+Explicar las limitaciones de la normalidad para inferencia y especialmente para interpretación de shocks.
+
+14.4 Heterocedasticidad
+
+Evaluar heterocedasticidad.
+
+Si statsmodels no proporciona una prueba multivariada directa apropiada para el VARX, explicar la limitación.
+
+Se puede complementar con pruebas univariadas sobre los residuos de cada ecuación.
+
+NO presentar una prueba univariada como si fuera una prueba multivariada.
+
+14.5 Inspección gráfica de residuos
+
+Mostrar:
+
+* residuos en el tiempo;
+* histogramas;
+* ACF de residuos.
+
+Interpretar.
+
+============================================================
+15. CAUSALIDAD DE GRANGER
+=========================
+
+Esta sección debe adaptarse cuidadosamente al hecho de que RONI es una variable exógena.
+
+Explicar primero:
+
+¿Qué es causalidad de Granger?
+
+¿Qué significa realmente?
+
+¿Qué NO significa?
+
+¿Por qué Granger no demuestra causalidad estructural o causalidad física?
+
+Explicar que Granger evalúa contenido predictivo incremental.
+
+Para las variables endógenas evaluar:
+
+Aportes → Precio
+
+Precio → Aportes
+
+Aportes → Generacion
+
+Generacion → Aportes
+
+Precio → Generacion
+
+Generacion → Precio
+
+Construir tabla:
+
+Variable causa | Variable efecto | estadístico | p-value | conclusión
+
+También evaluar el papel de RONI de manera compatible con el VARX.
+
+En particular, analizar si la inclusión de RONI como exógena mejora significativamente la explicación/predicción del sistema.
+
+NO tratar RONI simplemente como una cuarta variable endógena para hacer Granger.
+
+Explicar esta diferencia cuidadosamente.
+
+Si es posible realizar una prueba conjunta de significancia de los coeficientes asociados a RONI en las ecuaciones endógenas, implementarla.
+
+Interpretar:
+
+* RONI → Aportes
+* RONI → Precio
+* RONI → Generacion
+
+pero describir correctamente el resultado como evidencia de asociación predictiva/exogeneidad dentro del modelo, no como causalidad estructural absoluta.
+
+============================================================
+16. FUNCIONES IMPULSO-RESPUESTA — PARTE CRÍTICA
+===============================================
+
+Esta sección es uno de los objetivos principales del análisis.
+
+Explicar primero:
+
+¿Qué es una IRF?
+
+¿Qué es un shock?
+
+¿Qué significa una respuesta dinámica?
+
+¿Qué representa el horizonte temporal?
+
+¿Qué significa que una respuesta sea positiva o negativa?
+
+¿Qué significa que una respuesta sea estadísticamente significativa?
+
+¿Qué significa que el efecto sea persistente?
+
+============================================================
+
+IMPORTANTE:
+
+Las IRF estándar de un VAR están diseñadas para shocks de las variables endógenas.
+
+RONI está siendo tratado como exógeno.
+
+Por tanto, NO debes fingir que una IRF estándar de VAR representa correctamente un shock de RONI si la implementación de VARX no lo permite directamente.
+
+Investiga dentro de la metodología disponible cómo representar correctamente la respuesta del sistema ante un cambio de RONI.
+
+Si `statsmodels` no implementa directamente una IRF de VARX con shocks exógenos, debes:
+
+1. Explicar la limitación.
+
+2. NO tratar RONI como endógena únicamente para obtener una gráfica.
+
+3. Proponer una metodología alternativa correcta.
+
+Una alternativa puede ser construir respuestas dinámicas del sistema ante escenarios exógenos de RONI utilizando la ecuación estimada del VARX.
+
+Por ejemplo:
+
+Escenario base:
+RONI_t = valor observado/esperado.
+
+Escenario shock:
+RONI_t aumenta en una magnitud definida.
+
+Luego propagar el sistema dinámicamente utilizando el VARX estimado.
+
+Comparar:
+
+Trayectoria con shock
+
+vs.
+
+Trayectoria base.
+
+Definir claramente el shock.
+
+Preferiblemente considerar:
+
+* shock de 1 desviación estándar;
+* y, si es económicamente útil, shocks de magnitudes alternativas.
+
+IMPORTANTE:
+
+Explicar que RONI es un índice climático y que un "shock de 1 desviación estándar" significa una perturbación estadística, no necesariamente un evento climático físicamente específico.
+
+Mostrar respuestas de:
+
+RONI → Aportes
+
+RONI → Precio
+
+RONI → Generacion
+
+para varios horizontes.
+
+Por ejemplo:
+
+1 a 24 meses.
+
+Mostrar:
+
+* respuesta puntual;
+* intervalos de confianza si la metodología implementada permite obtenerlos de forma válida;
+* línea de referencia cero;
+* horizonte temporal.
+
+Interpretar:
+
+* signo;
+* magnitud;
+* tiempo hasta máximo impacto;
+* duración;
+* velocidad de disipación;
+* persistencia;
+* relevancia económica.
+
+Prestar especial atención a:
+
+1. ¿Un aumento de RONI reduce los aportes?
+
+2. ¿Un aumento de RONI afecta la generación?
+
+3. ¿Un aumento de RONI aumenta el precio?
+
+4. ¿Existe evidencia de la cadena:
+
+RONI → Aportes → Generacion → Precio?
+
+NO asumir que esta cadena debe aparecer.
+
+Determinarlo empíricamente.
+
+============================================================
+17. IRF ENTRE VARIABLES ENDÓGENAS
+=================================
+
+Además del análisis de RONI, realizar IRF tradicionales entre las variables endógenas:
+
+Aportes
+
+Precio
+
+Generacion
+
+Analizar todas las combinaciones relevantes.
+
+Por ejemplo:
+
+Shock Aportes → Precio
+
+Shock Aportes → Generacion
+
+Shock Generacion → Precio
+
+Shock Precio → Generacion
+
+etc.
+
+Mostrar gráficos profesionales.
+
+Explicar cuidadosamente la identificación de los shocks.
+
+Si se utiliza Cholesky:
+
+declarar explícitamente el ordenamiento.
+
+Por ejemplo:
+
+Aportes
+
+Generacion
+
+Precio
+
+o el orden que metodológicamente resulte más defendible.
+
+NO seleccionar el orden arbitrariamente.
+
+Explicar qué supuesto contemporáneo implica el orden elegido.
+
+============================================================
+18. FEVD
+========
+
+Realizar la descomposición de la varianza del error de pronóstico.
+
+Explicar:
+
+¿Qué es FEVD?
+
+¿Qué mide?
+
+¿Cómo complementa las IRF?
+
+Mostrar la proporción de la incertidumbre futura explicada por cada shock endógeno.
+
+Analizar especialmente:
+
+Precio
+
+Aportes
+
+Generacion
+
+IMPORTANTE:
+
+Explicar la limitación de FEVD respecto a RONI si el software no permite incluir directamente shocks exógenos en la descomposición estándar.
+
+Si RONI no puede incorporarse directamente:
+
+NO inventar una FEVD para RONI.
+
+Proponer una alternativa, como una descomposición basada en escenarios o simulaciones contrafactuales, y explicar que no es idéntica a la FEVD estándar.
+
+El objetivo es determinar cuánto de la dinámica del sistema eléctrico puede asociarse con innovaciones propias y cuánto con el componente climático exógeno.
+
+============================================================
+19. PRONÓSTICOS
+===============
+
+Explicar brevemente cómo funciona el pronóstico en un VARX.
+
+Una característica importante es que para pronosticar el sistema hacia adelante se necesita conocer o asumir la trayectoria futura de la variable exógena RONI.
+
+Explicar este punto cuidadosamente.
+
+Realizar pronósticos bajo diferentes escenarios de RONI.
+
+Por ejemplo:
+
+Escenario 1:
+RONI constante.
+
+Escenario 2:
+RONI retorna gradualmente a su media.
+
+Escenario 3:
+RONI presenta un shock positivo.
+
+Si resulta metodológicamente viable, mostrar:
+
+* pronóstico de Aportes;
+* pronóstico de Precio;
+* pronóstico de Generacion.
+
+Utilizar horizontes como:
+
+6 meses
+
+12 meses
+
+24 meses
+
+siempre que el tamaño de muestra lo permita.
+
+Mostrar intervalos de confianza cuando sean estadísticamente válidos.
+
+Explicar que la incertidumbre del pronóstico incluye la incertidumbre propia del sistema y que, si RONI futuro se fija como escenario, la incertidumbre asociada a la propia trayectoria futura de RONI no necesariamente está incorporada.
+
+============================================================
+20. VALIDACIÓN DEL MODELO
+=========================
+
+Si la cantidad de observaciones lo permite, realizar una evaluación fuera de muestra.
+
+Separar:
+
+training
+
+test
+
+Estimar el VARX únicamente con training.
+
+Realizar pronósticos sobre test.
+
+Comparar:
+
+* valores observados;
+* valores pronosticados.
+
+Calcular métricas apropiadas.
+
+Por ejemplo:
+
+MAE
+
+RMSE
+
+MAPE
+
+siempre que MAPE sea apropiado para la variable.
+
+Explicar las limitaciones del MAPE cuando existan valores cercanos a cero.
+
+No utilizar métricas automáticamente sin justificar su pertinencia.
+
+============================================================
+21. ANÁLISIS DE LA CADENA DE TRANSMISIÓN CLIMÁTICA
+==================================================
+
+Crear una sección específica que sintetice los resultados.
+
+Evaluar la hipótesis conceptual:
+
+RONI
+↓
+Aportes
+↓
+Generacion
+↓
+Precio
+
+Construir una tabla:
+
+Relación | Evidencia en coeficientes | Granger/predictibilidad | IRF | Conclusión
+
+Por ejemplo:
+
+RONI → Aportes
+
+RONI → Generacion
+
+RONI → Precio
+
+Aportes → Generacion
+
+Aportes → Precio
+
+Generacion → Precio
+
+NO asumir que todas las relaciones serán significativas.
+
+La tabla debe construirse automáticamente a partir de los resultados.
+
+Clasificar cada relación como:
+
+* evidencia fuerte;
+* evidencia moderada;
+* evidencia débil;
+* sin evidencia estadística.
+
+Definir previamente los criterios utilizados para esa clasificación.
+
+============================================================
+22. IMPLICACIÓN PARA EL DERIVADO CLIMÁTICO
+==========================================
+
+Esta sección es muy importante para conectar el análisis econométrico con el objetivo financiero del proyecto.
+
+Explicar:
+
+Si RONI presenta una relación estadísticamente significativa con variables energéticas, ¿qué significa para el diseño del derivado?
+
+Si RONI explica variabilidad de Precio, ¿qué evidencia existe para utilizar RONI como índice subyacente?
+
+Si RONI afecta primero a Aportes y luego a Precio, ¿qué significa para el mecanismo de transmisión del riesgo?
+
+Si RONI no explica Precio directamente pero sí Aportes, ¿sigue existiendo una justificación para el derivado?
+
+Discutir cuidadosamente:
+
+* significancia estadística;
+* magnitud económica;
+* persistencia;
+* estabilidad;
+* capacidad predictiva;
+* riesgo de base.
+
+NO concluir que existe viabilidad comercial del derivado únicamente porque exista significancia estadística.
+
+Explicar que todavía serían necesarias etapas posteriores como:
+
+* diseño del payoff;
+* selección del período de referencia;
+* definición del strike o umbral;
+* calibración;
+* valoración;
+* backtesting;
+* análisis de efectividad de cobertura;
+* riesgo de base;
+* regulación;
+* liquidez.
+
+============================================================
+23. LIMITACIONES
+================
+
+Crear una sección explícita de limitaciones.
+
+Considerar al menos:
+
+1. Tamaño de muestra.
+
+2. Frecuencia mensual.
+
+3. Posibles efectos no lineales.
+
+4. Posibles relaciones de régimen entre El Niño, La Niña y condiciones normales.
+
+5. Variables omitidas.
+
+6. Demanda eléctrica.
+
+7. Generación térmica.
+
+8. Disponibilidad de embalses.
+
+9. Exportaciones/importaciones.
+
+10. Variables regulatorias.
+
+11. Cambios estructurales del mercado eléctrico.
+
+12. Posibles cambios en la matriz energética.
+
+13. Supuesto de exogeneidad de RONI.
+
+14. Limitaciones de identificación de shocks.
+
+15. Limitaciones de las IRF para variables exógenas.
+
+16. Limitaciones de FEVD respecto a la variable exógena.
+
+17. No linealidad.
+
+18. Posibles efectos asimétricos entre El Niño y La Niña.
+
+19. Posible heterocedasticidad.
+
+20. Posibles errores de medición.
+
+No inventar problemas que no puedan justificarse.
+
+============================================================
+24. CONCLUSIONES
+================
+
+La sección final debe construirse ÚNICAMENTE a partir de los resultados obtenidos.
+
+Responder explícitamente:
+
+1. ¿El VARX resulta metodológicamente apropiado?
+
+2. ¿RONI presenta evidencia estadística de relación con Aportes?
+
+3. ¿RONI presenta evidencia estadística de relación con Generacion?
+
+4. ¿RONI presenta evidencia estadística de relación con Precio?
+
+5. ¿Existe evidencia de interacción dinámica entre Aportes, Precio y Generacion?
+
+6. ¿Qué relaciones resultaron más fuertes?
+
+7. ¿Qué mostró Granger?
+
+8. ¿Qué mostraron las IRF?
+
+9. ¿Qué mostró la FEVD?
+
+10. ¿Qué tan persistentes son los efectos?
+
+11. ¿Existe evidencia compatible con la cadena:
+
+RONI → Aportes → Generacion → Precio?
+
+12. ¿Qué parte de la hipótesis del proyecto queda respaldada?
+
+13. ¿Qué parte todavía no puede afirmarse?
+
+14. ¿Existe suficiente evidencia para avanzar al diseño de un derivado climático?
+
+IMPORTANTE:
+
+No escribir conclusiones genéricas.
+
+Las conclusiones deben mencionar resultados concretos.
+
+============================================================
+25. REQUISITOS DE VISUALIZACIÓN
+===============================
+
+Todos los gráficos deben ser profesionales y apropiados para una tesis.
+
+Utilizar:
+
+* títulos claros;
+* nombres de variables comprensibles;
+* unidades;
+* ejes correctamente etiquetados;
+* leyendas;
+* línea cero cuando sea relevante;
+* fechas correctamente formateadas;
+* tamaño adecuado.
+
+Evitar gráficos innecesariamente recargados.
+
+Para IRF utilizar una estructura clara.
+
+Para FEVD utilizar gráficos que permitan comparar fácilmente las contribuciones.
+
+Para correlaciones utilizar heatmaps.
+
+============================================================
+26. REQUISITOS DE PROGRAMACIÓN
+==============================
+
+Utilizar principalmente:
+
+pandas
+
+numpy
+
+matplotlib
+
+statsmodels
+
+scipy
+
+Evitar librerías innecesarias.
+
+Utilizar funciones cuando mejore la organización.
+
+No crear un único bloque enorme de código.
+
+Cada sección debe alternar:
+
+Markdown
+
+Código
+
+Markdown
+
+Código
+
+etc.
+
+Cada bloque de código debe poder ejecutarse dentro del flujo normal del notebook.
+
+No ocultar resultados importantes.
+
+Guardar resultados relevantes en DataFrames para poder reutilizarlos posteriormente.
+
+============================================================
+27. REQUISITO ESPECIAL: NO OCULTAR PROBLEMAS METODOLÓGICOS
+==========================================================
+
+Este punto es fundamental.
+
+Si encuentras que una metodología estándar de VAR no puede aplicarse directamente a VARX en `statsmodels`, NO fuerces el procedimiento.
+
+Explica:
+
+1. Qué se quería hacer.
+
+2. Por qué el método estándar no es directamente aplicable.
+
+3. Qué limitación tiene la librería.
+
+4. Qué alternativa metodológica existe.
+
+5. Por qué esa alternativa es válida.
+
+6. Cómo debe interpretarse.
+
+Es preferible tener una metodología ligeramente más compleja pero correcta que una metodología sencilla pero incorrecta.
+
+============================================================
+28. REQUISITO ESPECIAL: DECISIONES AUTOMÁTICAS
+==============================================
+
+El notebook debe ser capaz de adaptar ciertas decisiones a los resultados.
+
+Por ejemplo:
+
+Si una variable es estacionaria:
+mantenerla en niveles.
+
+Si no es estacionaria:
+evaluar transformación apropiada.
+
+Si las variables endógenas son I(1) y cointegradas:
+discutir VECMX.
+
+Si no están cointegradas:
+considerar VARX en diferencias.
+
+Si el modelo presenta autocorrelación residual:
+evaluar aumento de rezagos o problemas de especificación.
+
+Si el modelo no es estable:
+advertir que las IRF y pronósticos deben interpretarse con cautela.
+
+NO ocultar resultados desfavorables.
+
+============================================================
+29. ESTRUCTURA FINAL DEL NOTEBOOK
+=================================
+
+El notebook debe quedar organizado aproximadamente así:
+
+1. Introducción y objetivo
+
+2. Importación de librerías
+
+3. Carga y validación de datos
+
+4. Descripción de variables
+
+5. Visualización exploratoria
+
+6. Correlaciones y relaciones preliminares
+
+7. Fundamentos del VARX
+
+8. Evaluación de estacionariedad
+
+9. Transformación de variables
+
+10. Cointegración y discusión de largo plazo
+
+11. Selección del número de rezagos
+
+12. Especificación matemática del VARX
+
+13. Estimación
+
+14. Interpretación de coeficientes
+
+15. Diagnósticos
+
+16. Causalidad de Granger / predictibilidad
+
+17. IRF de variables endógenas
+
+18. Respuesta dinámica ante shocks exógenos de RONI
+
+19. FEVD
+
+20. Pronósticos bajo escenarios de RONI
+
+21. Validación fuera de muestra, si es viable
+
+22. Síntesis de la cadena climática
+
+23. Implicaciones para el derivado climático
+
+24. Limitaciones
+
+25. Conclusiones
+
+============================================================
+30. FORMA DE EXPLICAR CADA SECCIÓN
+==================================
+
+Antes de cada análisis escribe una explicación teórica.
+
+Utiliza la estructura:
+
+### ¿Qué estamos haciendo?
+
+### ¿Por qué lo hacemos?
+
+### Fundamento econométrico
+
+### Código
+
+### Resultados
+
+### Interpretación estadística
+
+### Interpretación económica
+
+### Implicación para el proyecto
+
+### Conclusión
+
+No es necesario repetir literalmente estos títulos en todas las secciones si afecta la fluidez, pero la información debe estar presente.
+
+============================================================
+31. ESTILO ACADÉMICO
+====================
+
+El notebook debe tener lenguaje académico.
+
+No utilizar frases como:
+
+"parece que funciona"
+
+"el modelo está bien"
+
+"hay una relación fuerte"
+
+sin explicar exactamente:
+
+* qué evidencia lo demuestra;
+* qué estadístico lo respalda;
+* qué hipótesis se está evaluando;
+* qué nivel de significancia se utiliza;
+* cuál es la interpretación económica.
+
+Diferenciar siempre entre:
+
+correlación
+
+asociación estadística
+
+predictibilidad
+
+causalidad de Granger
+
+causalidad estructural
+
+causalidad física
+
+No confundir estos conceptos.
+
+============================================================
+32. RESULTADO ESPERADO
+======================
+
+Al finalizar quiero tener un notebook de Jupyter que pueda utilizar directamente como parte del desarrollo de una tesis de maestría.
+
+El notebook debe permitir responder de manera rigurosa:
+
+¿Existe evidencia estadística de que el índice RONI contiene información relevante para explicar la dinámica de los aportes hídricos, la generación y el precio de energía en Colombia?
+
+Y posteriormente:
+
+¿La magnitud y persistencia de esa relación son suficientemente relevantes para justificar el avance hacia el diseño de un derivado climático basado en RONI?
+
+NO inventes resultados.
+
+NO escribas conclusiones antes de ejecutar los análisis.
+
+NO asumas que RONI tendrá un efecto positivo o negativo.
+
+NO asumas que Granger será significativo.
+
+NO asumas que las IRF mostrarán la cadena climática esperada.
+
+Todo debe derivarse de los datos.
+
+============================================================
+33. INSTRUCCIÓN FINAL
+=====================
+
+Construye el notebook completo en Python siguiendo todas las especificaciones anteriores.
+
+Quiero que el resultado sea:
+
+* reproducible;
+* modular;
+* académicamente riguroso;
+* visualmente claro;
+* estadísticamente correcto;
+* económicamente interpretable;
+* directamente conectado con el objetivo de diseñar posteriormente un derivado climático.
+
+Antes de comenzar a escribir código, presenta brevemente la arquitectura metodológica que vas a implementar y explica cualquier diferencia importante respecto al VAR anterior.
+
+Después construye el notebook sección por sección.
+
+No omitas explicaciones para ahorrar espacio.
+
+La prioridad es la rigurosidad econométrica y la correcta interpretación de los resultados.
